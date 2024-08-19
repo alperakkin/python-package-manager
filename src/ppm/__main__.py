@@ -1,27 +1,9 @@
 
 import argparse
 
-from ppm.libs.commands import Command
+from ppm.libs.manager import PackageManager
 
-command = Command()
-
-
-template = {
-    "author": "",
-    "author-url": "",
-    "license": "",
-    "version": "1.0.0",
-    "virtual-env": "",
-    ".env": "",
-    "scripts": {
-        "start": "",
-        "build": "",
-        "test": ""
-    },
-    "shell": "sh",
-    "module": "python",
-    "packages": {},
-}
+pkg_manager = PackageManager()
 
 
 if __name__ == "__main__":
@@ -29,12 +11,24 @@ if __name__ == "__main__":
         prog="PPM", description="Python Package Manager"
     )
     subparsers = parser.add_subparsers(title="Commands", dest="command")
-    for arg, meta in command.map.items():
-        command_parser = subparsers.add_parser(arg,
-                                               help=meta["help"])
-        command_parser.set_defaults(func=meta['command'])
+    for func in dir(pkg_manager):
+        if func.startswith("cmd_"):
+            func_name = pkg_manager.get_func_name(func)
+            cmd = getattr(pkg_manager, func)
+            doc = cmd.__doc__
 
-args = parser.parse_args()
+            command_parser = subparsers.add_parser(func_name,
+                                                   help=doc)
+            command_parser.set_defaults(func=cmd)
 
-if args.command == 'init':
-    args.func(template)
+    args = parser.parse_args()
+
+    match args.command:
+        case "init":
+            args.func()
+        case "start":
+            args.func("script")
+        case "run":
+            args.func("script")
+        case _:
+            parser.print_help()
