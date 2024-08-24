@@ -27,7 +27,7 @@ if __name__ == "__main__":
         case "init":
             args.func()
         case "start":
-            args.func("script")
+            args.func()
         case "run":
             args.func("script")
         case _:

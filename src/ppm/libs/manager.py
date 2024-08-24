@@ -13,7 +13,7 @@ class PackageManager:
         self.author_url = ""
         self.version = "1.0.0"
         self.virtual_env = ""
-        self.env_file = ""
+        self.env_file = ".env"
         self.scripts = {
             "start": "",
             "build": "",
@@ -48,13 +48,16 @@ class PackageManager:
     def eval_package(self):
         project_path = Path(self.project)
         project_path.mkdir(parents=True, exist_ok=True)
+        env_path = Path(self.project) / self.virtual_env
+        self.shell_manager.execute(f"python -m venv {env_path}")
         # TODO: Activate the virtual environment here
+        # TODO: Set project file as active dir
 
     @ handle_errors
-    def cmd_start(self, script):
+    def cmd_start(self):
         """Executes start script"""
 
-        raise NotImplementedError(script)
+        raise NotImplementedError("PPM Start not impleneted yet")
 
     @ handle_errors
     def cmd_init(self):
@@ -65,7 +68,9 @@ class PackageManager:
                 out = input(f"{key}: {val} -> ")
                 setattr(self, key, out or val)
                 self.validate(key)
-        write_json(self.PACKAGE_FILE, self.to_dict)
+
+        package_path = Path(self.project) / Path(self.PACKAGE_FILE)
+        write_json(package_path, self.to_dict)
         self.eval_package()
 
     @ handle_errors
