@@ -8,19 +8,19 @@ class PackageManager:
     PACKAGE_FILE = "pyconfig.json"
 
     def __init__(self):
-        self.project = "aa"
+        self.project = ""
         self.author = ""
         self.author_url = ""
         self.version = "1.0.0"
-        self.virtual_env = "myenv"
-        self.env_file = "tt"
+        self.virtual_env = ""
+        self.env_file = ""
         self.scripts = {
             "start": "",
             "build": "",
             "test": ""
         }
         self.shell = "sh"
-        self.module = "python"
+        self.module = "python3.8"
         self.packages = {}
         self.__shell_manager = Shell()
 
@@ -48,18 +48,15 @@ class PackageManager:
     def eval_package(self):
         project_path = Path(self.project)
         project_path.mkdir(parents=True, exist_ok=True)
+        # TODO: Activate the virtual environment here
 
-        if self.virtual_env:
-            env_path = project_path / self.virtual_env
-            self.shell_manager.execute(f"python -m venv  {env_path}")
-
-    @handle_errors
+    @ handle_errors
     def cmd_start(self, script):
         """Executes start script"""
 
         raise NotImplementedError(script)
 
-    @handle_errors
+    @ handle_errors
     def cmd_init(self):
         """Initializes a new project"""
 
@@ -71,7 +68,7 @@ class PackageManager:
         write_json(self.PACKAGE_FILE, self.to_dict)
         self.eval_package()
 
-    @handle_errors
+    @ handle_errors
     def cmd_run(self, script):
         """Executes predefined script"""
         raise NotImplementedError(script)
