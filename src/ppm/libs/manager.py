@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ppm.libs.utils import write_json, handle_errors
+from ppm.libs.utils import write_json, read_json, handle_errors
 from ppm.libs.process import Shell
 
 
@@ -55,9 +55,13 @@ class PackageManager:
 
     @ handle_errors
     def cmd_start(self):
-        """Executes start script"""
-
-        raise NotImplementedError("PPM Start not impleneted yet")
+        package = read_json(self.PACKAGE_FILE)
+        start_script = package["scripts"].get('start')
+        if not start_script:
+            raise ValueError(
+                f"Please provide a start script in to {self.PACKAGE_FILE}"
+            )
+        self.shell_manager.execute(start_script)
 
     @ handle_errors
     def cmd_init(self):
@@ -70,8 +74,8 @@ class PackageManager:
                 self.validate(key)
 
         package_path = Path(self.project) / Path(self.PACKAGE_FILE)
-        write_json(package_path, self.to_dict)
         self.eval_package()
+        write_json(package_path, self.to_dict)
 
     @ handle_errors
     def cmd_run(self, script):
