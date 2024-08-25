@@ -61,6 +61,7 @@ class PackageManager:
             raise ValueError(
                 f"Please provide a start script in to {self.PACKAGE_FILE}"
             )
+        print(start_script)
         self.shell_manager.execute(start_script)
 
     @ handle_errors
@@ -80,4 +81,4 @@ class PackageManager:
     @ handle_errors
     def cmd_run(self, script):
         """Executes predefined script"""
-        raise NotImplementedError(script)
+        self.shell_manager.execute(script)
