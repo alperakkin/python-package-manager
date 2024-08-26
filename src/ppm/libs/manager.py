@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from ppm.libs.utils import write_json, read_json, handle_errors
+from ppm.libs.utils import (write_json, read_json,
+                            handle_errors, load_package, get_package_info)
 from ppm.libs.process import Shell
 
 
 class PackageManager:
-    PACKAGE_FILE = "pyconfig.json"
+    PACKAGE_PATH = "pyconfig.json"
 
     def __init__(self):
         self.project = ""
@@ -36,6 +37,10 @@ class PackageManager:
                 dict_view.pop(k)
         return dict_view
 
+    @property
+    def env_path(self):
+        return Path(self.project) / self.virtual_env
+
     def get_func_name(self, func):
         return func.split("cmd_")[1]
 
@@ -48,18 +53,17 @@ class PackageManager:
     def eval_package(self):
         project_path = Path(self.project)
         project_path.mkdir(parents=True, exist_ok=True)
-        env_path = Path(self.project) / self.virtual_env
-        self.shell_manager.execute(f"python -m venv {env_path}")
+        self.shell_manager.execute(f"python -m venv {self.env_path}")
         # TODO: Activate the virtual environment here
         # TODO: Set project file as active dir
 
     def execute_package_scripts(self, script_name):
-        package = read_json(self.PACKAGE_FILE)
+        package = read_json(self.PACKAGE_PATH)
         script = package["scripts"].get(script_name)
         if not script:
             raise ValueError(
                 f"Please provide a {script_name} "
-                f"script in to {self.PACKAGE_FILE}"
+                f"script in to {self.PACKAGE_PATH}"
             )
 
         self.shell_manager.execute(script)
@@ -89,11 +93,33 @@ class PackageManager:
                 setattr(self, key, out or val)
                 self.validate(key)
 
-        package_path = Path(self.project) / Path(self.PACKAGE_FILE)
+        package_path = Path(self.project) / Path(self.PACKAGE_PATH)
         self.eval_package()
         write_json(package_path, self.to_dict)
 
     @ handle_errors
     def cmd_run(self, script):
         """Executes predefined script"""
+        script = ' '.join(script)
         self.shell_manager.execute(script)
+
+    # @ handle_errors
+    @ load_package
+    def cmd_install(self, packages):
+        for package in packages:
+            package_name, version = get_package_info(package)
+            install_script = package_name if version == 'latest'\
+                else f'{package_name}=={version}'
+
+            res = self.shell_manager.execute(
+                f"./{self.virtual_env}/bin/pip install {install_script}"
+            )
+            if res.returncode == 1:
+                raise ValueError("Not a valid package")
+
+            if version == 'latest':
+                res = self.shell_manager.execute(
+                    f"./{self.virtual_env}/bin/pip show {package_name}"
+                )
+            res.stdout.split("\n")
+            # TODO: get installed package info from stdout

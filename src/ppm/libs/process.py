@@ -7,4 +7,5 @@ class Shell:
         self.shell = shell
 
     def execute(self, cmd):
-        subprocess.run(cmd, shell=True)
+        return subprocess.run(cmd, stdout=subprocess.PIPE,
+                              stderr=subprocess.STDOUT, shell=True)
