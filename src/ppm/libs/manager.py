@@ -53,16 +53,31 @@ class PackageManager:
         # TODO: Activate the virtual environment here
         # TODO: Set project file as active dir
 
+    def execute_package_scripts(self, script_name):
+        package = read_json(self.PACKAGE_FILE)
+        script = package["scripts"].get(script_name)
+        if not script:
+            raise ValueError(
+                f"Please provide a {script_name} "
+                f"script in to {self.PACKAGE_FILE}"
+            )
+
+        self.shell_manager.execute(script)
+
     @ handle_errors
     def cmd_start(self):
-        package = read_json(self.PACKAGE_FILE)
-        start_script = package["scripts"].get('start')
-        if not start_script:
-            raise ValueError(
-                f"Please provide a start script in to {self.PACKAGE_FILE}"
-            )
-        print(start_script)
-        self.shell_manager.execute(start_script)
+        """Executes the predefined start script"""
+        self.execute_package_scripts('start')
+
+    @ handle_errors
+    def cmd_build(self):
+        """Executes the predefined build script"""
+        self.execute_package_scripts('build')
+
+    @ handle_errors
+    def cmd_test(self):
+        """Executes the predefined test script"""
+        self.execute_package_scripts('test')
 
     @ handle_errors
     def cmd_init(self):

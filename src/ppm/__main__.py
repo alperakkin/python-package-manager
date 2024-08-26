@@ -30,6 +30,10 @@ if __name__ == "__main__":
             args.func()
         case "start":
             args.func()
+        case "build":
+            args.func()
+        case "test":
+            args.func()
         case "run":
             args.func(' '.join(args.run_args))
         case _:
