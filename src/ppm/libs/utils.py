@@ -1,6 +1,7 @@
 import sys
 import functools
 import json
+import re
 
 
 def handle_errors(func):
@@ -42,3 +43,20 @@ def get_package_info(package):
         package_name = package
         version = 'latest'
     return (package_name, version)
+
+
+def get_version_info(stdout):
+    stdout = stdout.decode("utf-8")
+    info = {}
+    info['name'] = re.findall('Name:(.*)\n', stdout)[0].strip()
+    info['version'] = re.findall('Version:(.*)\n', stdout)[0].strip()
+    info['summary'] = re.findall('Summary:(.*)\n', stdout)[0].strip()
+    info['home_page'] = re.findall('Home-page:(.*)\n', stdout)[0].strip()
+    info['author'] = re.findall('Author:(.*)\n', stdout)[0].strip()
+    info['author_email'] = re.findall('Author-email:(.*)\n', stdout)[0].strip()
+    info['license'] = re.findall('License:(.*)\n', stdout)[0].strip()
+    info['location'] = re.findall('Location:(.*)\n', stdout)[0].strip()
+    info['author_email'] = re.findall('Author-email:(.*)\n', stdout)[0].strip()
+    info['requires'] = re.findall('Requires:(.*)\n', stdout)[0].strip()
+    info['required_by'] = re.findall('Required-by:(.*)\n', stdout)[0].strip()
+    return info

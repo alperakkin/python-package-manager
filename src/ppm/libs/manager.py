@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from ppm.libs.utils import (write_json, read_json,
-                            handle_errors, load_package, get_package_info)
+                            handle_errors, load_package, get_package_info,
+                            get_version_info)
 from ppm.libs.process import Shell
 
 
@@ -68,6 +69,22 @@ class PackageManager:
 
         self.shell_manager.execute(script)
 
+    def remove_previous_packages(self, package_name):
+        for package_def, info in self.packages.copy().items():
+            if info['name'] == package_name:
+
+                res = self.shell_manager.execute(
+                    [f"./{self.virtual_env}/bin/pip", "uninstall", "-y"
+                     f"{package_name}"]
+                )
+
+                if res.returncode == 0:
+                    print(f"{package_name} previous version removed!")
+                    self.packages.pop(package_def)
+                else:
+                    raise ValueError(f"Previous version for {package_name}"
+                                     "could not be removed")
+
     @ handle_errors
     def cmd_start(self):
         """Executes the predefined start script"""
@@ -103,7 +120,7 @@ class PackageManager:
         script = ' '.join(script)
         self.shell_manager.execute(script)
 
-    # @ handle_errors
+    @ handle_errors
     @ load_package
     def cmd_install(self, packages):
         for package in packages:
@@ -111,15 +128,23 @@ class PackageManager:
             install_script = package_name if version == 'latest'\
                 else f'{package_name}=={version}'
 
-            res = self.shell_manager.execute(
+            self.remove_previous_packages(package_name)
+
+            install_args = \
                 f"./{self.virtual_env}/bin/pip install {install_script}"
-            )
-            if res.returncode == 1:
+
+            install_result = self.shell_manager.execute(install_args)
+
+            if install_result.returncode != 0:
                 raise ValueError("Not a valid package")
 
-            if version == 'latest':
-                res = self.shell_manager.execute(
-                    f"./{self.virtual_env}/bin/pip show {package_name}"
-                )
-            res.stdout.split("\n")
-            # TODO: get installed package info from stdout
+            pip_show_result = self.shell_manager.execute(
+                f"./{self.virtual_env}/bin/pip show {package_name}"
+            )
+
+            info = get_version_info(pip_show_result.stdout)
+            installed_version = info['version']
+            package_def = f'{package_name}@{installed_version}'
+            self.packages[package_def] = info
+            print(f"{package_def} successfully installed!")
+            write_json(self.PACKAGE_PATH, self.to_dict)
