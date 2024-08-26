@@ -8,6 +8,7 @@ from ppm.libs.process import Shell
 
 class PackageManager:
     PACKAGE_PATH = "pyconfig.json"
+    LOCK_PATH = "pyconfig.lock.json"
 
     def __init__(self):
         self.project = ""
@@ -123,12 +124,18 @@ class PackageManager:
     @ handle_errors
     @ load_package
     def cmd_install(self, packages):
+        first_use = False
+        if not packages:
+            first_use = True
+            packages = self.packages.copy().keys()
+            write_json(self.LOCK_PATH, self.to_dict)
         for package in packages:
             package_name, version = get_package_info(package)
             install_script = package_name if version == 'latest'\
                 else f'{package_name}=={version}'
 
-            self.remove_previous_packages(package_name)
+            if not first_use:
+                self.remove_previous_packages(package_name)
 
             install_args = \
                 f"./{self.virtual_env}/bin/pip install {install_script}"
