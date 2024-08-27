@@ -26,7 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     match args.command:
-        case "start" | "build" | "test":
+        case "start" | "build" | "test" | "init":
             args.func()
         case "run" | "install":
             args.func(args.nargs)

@@ -45,6 +45,11 @@ def get_package_info(package):
     return (package_name, version)
 
 
+def create_file(path):
+    with open(path, 'a'):
+        pass
+
+
 def get_version_info(stdout):
     stdout = stdout.decode("utf-8")
     info = {}

@@ -1,8 +1,9 @@
+import os
 from pathlib import Path
 
 from ppm.libs.utils import (write_json, read_json,
                             handle_errors, load_package, get_package_info,
-                            get_version_info)
+                            get_version_info, create_file)
 from ppm.libs.process import Shell
 
 
@@ -23,7 +24,7 @@ class PackageManager:
             "test": ""
         }
         self.shell = "sh"
-        self.module = "python3.8"
+        self.module = "python"
         self.packages = {}
         self.__shell_manager = Shell()
 
@@ -55,9 +56,15 @@ class PackageManager:
     def eval_package(self):
         project_path = Path(self.project)
         project_path.mkdir(parents=True, exist_ok=True)
-        self.shell_manager.execute(f"python -m venv {self.env_path}")
-        # TODO: Activate the virtual environment here
-        # TODO: Set project file as active dir
+        create_file(f"{self.project}/{self.env_file}")
+        self.shell_manager.execute(f"{self.module} -m venv {self.env_path}")
+        cwd = os.getcwd()
+        cmd = 'tell application "Terminal" to do script ' + \
+            f'"cd {cwd}/{self.project} && source {self.virtual_env}/bin/activate"' + \
+            ' in front window'
+
+        self.shell_manager.execute(['osascript', '-e', cmd], active=False)
+        # TODO: execute shell for all operating systems
 
     def execute_package_scripts(self, script_name):
         package = read_json(self.PACKAGE_PATH)
@@ -124,6 +131,7 @@ class PackageManager:
     @ handle_errors
     @ load_package
     def cmd_install(self, packages):
+        """Installs python packages"""
         first_use = False
         if not packages:
             first_use = True

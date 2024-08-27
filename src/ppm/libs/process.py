@@ -6,6 +6,7 @@ class Shell:
         self.proc = None
         self.shell = shell
 
-    def execute(self, cmd):
+    def execute(self, cmd, active=True):
         return subprocess.run(cmd, stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT, shell=True)
+                              stderr=subprocess.STDOUT, timeout=10,
+                              shell=active)
