@@ -55,14 +55,20 @@ class PackageManager:
 
     def eval_package(self):
         project_path = Path(self.project)
+        # create project folder
         project_path.mkdir(parents=True, exist_ok=True)
+
+        # create .env
         create_file(f"{self.project}/{self.env_file}")
+
+        # create virtual env
         self.shell_manager.execute(f"{self.module} -m venv {self.env_path}")
         cwd = os.getcwd()
         cmd = 'tell application "Terminal" to do script ' + \
-            f'"cd {cwd}/{self.project} && source {self.virtual_env}/bin/activate"' + \
-            ' in front window'
+            f'"cd {cwd}/{self.project} &&' + \
+            'source {self.virtual_env}/bin/activate"' + ' in front window'
 
+        # Execute shell & activate environment
         self.shell_manager.execute(['osascript', '-e', cmd], active=False)
         # TODO: execute shell for all operating systems
 
