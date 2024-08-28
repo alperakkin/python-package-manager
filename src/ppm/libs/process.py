@@ -17,7 +17,8 @@ class Shell:
                 script = f'"cd {cwd}/{project} && source\
                       {virtual_env}/bin/activate"'
             case 'Windows':
-                script = f'"cd {cwd}/{project} && {virtual_env}/bin/activate"'
+                script = f'"cd {cwd}/{project} &&\
+                      {virtual_env}\\Scripts\\activate"'
             case _:
                 raise ValueError("Can not create activation script")
 

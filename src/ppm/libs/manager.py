@@ -1,5 +1,3 @@
-import os
-
 from pathlib import Path
 
 from ppm.libs.utils import (write_json, read_json,
