@@ -1,4 +1,5 @@
 import os
+
 from pathlib import Path
 
 from ppm.libs.utils import (write_json, read_json,
@@ -63,14 +64,8 @@ class PackageManager:
 
         # create virtual env
         self.shell_manager.execute(f"{self.module} -m venv {self.env_path}")
-        cwd = os.getcwd()
-        cmd = 'tell application "Terminal" to do script ' + \
-            f'"cd {cwd}/{self.project} &&' + \
-            'source {self.virtual_env}/bin/activate"' + ' in front window'
 
-        # Execute shell & activate environment
-        self.shell_manager.execute(['osascript', '-e', cmd], active=False)
-        # TODO: execute shell for all operating systems
+        self.shell_manager.activate_virtual_env()
 
     def execute_package_scripts(self, script_name):
         package = read_json(self.PACKAGE_PATH)
