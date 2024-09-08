@@ -81,10 +81,10 @@ to the project folder and activates the virtual environment.
 
 In the project folder files named "pyconfig.json" and ".env"  will be created.
 
-├── My_Project
-│   ├── my_venv
-│   ├── .env
-│   ├── pyconfig.json
+├── My_Project   
+│   ├── my_venv   
+│   ├── .env   
+│   ├── pyconfig.json   
 
 
 
