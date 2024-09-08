@@ -19,13 +19,15 @@ if __name__ == "__main__":
 
             command_parser = subparsers.add_parser(func_name,
                                                    help=doc)
-
+            
             command_parser.add_argument("nargs",  nargs='*')
+        
             command_parser.set_defaults(func=cmd)
 
     args = parser.parse_args()
 
     match args.command:
+        
         case "start" | "build" | "test" | "init":
             args.func()
         case "run" | "install":

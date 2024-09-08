@@ -22,7 +22,7 @@ class PackageManager:
             "build": "",
             "test": ""
         }
-        self.shell = "sh"
+        self.shell = "cmd"
         self.module = "python"
         self.packages = {}
         self.__shell_manager = Shell()
@@ -63,7 +63,7 @@ class PackageManager:
         # create virtual env
         self.shell_manager.execute(f"{self.module} -m venv {self.env_path}")
 
-        self.shell_manager.activate_virtual_env()
+        self.shell_manager.activate_virtual_env(self.project, self.virtual_env)
 
     def execute_package_scripts(self, script_name):
         package = read_json(self.PACKAGE_PATH)

@@ -4,7 +4,7 @@ import os
 
 
 class Shell:
-    def __init__(self, shell='sh'):
+    def __init__(self, shell='cmd'):
         self.proc = None
         self.shell = shell
         self.system = platform.system()
@@ -14,11 +14,9 @@ class Shell:
         cwd = os.getcwd()
         match self.system:
             case 'Darwin' | 'Linux':
-                script = f'"cd {cwd}/{project} && source\
-                      {virtual_env}/bin/activate"'
+                script = f'"cd {cwd}/{project} && source {virtual_env}/bin/activate"'
             case 'Windows':
-                script = f'"cd {cwd}/{project} &&\
-                      {virtual_env}\\Scripts\\activate"'
+                script = rf'cd {cwd}\{project} &&  {virtual_env}\Scripts\activate.bat'
             case _:
                 raise ValueError("Can not create activation script")
 
@@ -29,16 +27,17 @@ class Shell:
             case 'Darwin':
                 script = 'tell application "Terminal" to do script ' + \
                     script + ' in front window'
-                self.execute(['osascript', '-e', script], active=False)
+                self.execute(['osascript', '-e', script])
             case 'Linux':
-                self.execute(['gnome-terminal', '--', 'bash', '-c', script],
-                             active=False)
+                self.execute(['gnome-terminal', '--', 'bash', '-c', script])
             case 'Windows':
-                subprocess.run(['start', 'cmd', '/k', script], active=False)
+                self.execute(['cmd', '/k', script], {'shell': True})
             case '_':
                 raise ValueError("Can not execute terminal due to unknown OS!")
 
-    def execute(self, cmd, active=True):
-        return subprocess.run(cmd, stdout=subprocess.PIPE,
-                              stderr=subprocess.STDOUT, timeout=10,
-                              shell=active)
+    def execute(self, cmd,  kwargs={
+                                'shell': False,
+                                'stdout':subprocess.PIPE,
+                                'stderr':subprocess.PIPE}):
+        return subprocess.run(cmd, **kwargs)
+   
