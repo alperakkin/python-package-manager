@@ -144,19 +144,11 @@ class PackageManager:
             if not first_use:
                 self.remove_previous_packages(package_name)
 
-            install_args = \
-                f"./{self.virtual_env}/bin/pip install {install_script}"
+          
+            self.shell_manager.install_package(self.virtual_env, install_script)
 
-            install_result = self.shell_manager.execute(install_args)
-
-            if install_result.returncode != 0:
-                raise ValueError("Not a valid package")
-
-            pip_show_result = self.shell_manager.execute(
-                f"./{self.virtual_env}/bin/pip show {package_name}"
-            )
-
-            info = get_version_info(pip_show_result.stdout)
+            info = self.shell_manager.show_package(self.virtual_env, package_name)
+            info = get_version_info(info)
             installed_version = info['version']
             package_def = f'{package_name}@{installed_version}'
             self.packages[package_def] = info

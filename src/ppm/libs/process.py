@@ -22,6 +22,36 @@ class Shell:
 
         self.terminal_script(script)
 
+    def install_package(self, virtual_env, package):
+        script = ""
+        output = None
+        match self.system:
+            case 'Darwin' | 'Linux':
+                script = f"./{virtual_env}/bin/pip install {package}"
+                output = self.execute(script)
+            case 'Windows':
+                script = rf'{virtual_env}\Scripts\pip install {package}'
+                output = self.execute(script, {'shell': True})
+            case _:
+                raise ValueError("Can execute install script")
+        if output.returncode != 0:
+                raise ValueError("Not a valid package")
+
+    def show_package(self, virtual_env, package):
+        script = ""
+        output = None
+        match self.system:
+            case 'Darwin' | 'Linux':
+                script =  f"./{self.virtual_env}/bin/pip show {package}"
+                output =  self.execute(script)
+            case 'Windows':
+                script = rf'{virtual_env}\Scripts\pip show {package}'
+                output = self.execute(['cmd', '/c', script])
+            case _:
+                raise ValueError("Can execute package show script")
+        return output.stdout
+
+
     def terminal_script(self, script):
         match self.system:
             case 'Darwin':

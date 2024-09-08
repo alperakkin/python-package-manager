@@ -2,7 +2,11 @@ import sys
 import functools
 import json
 import re
+import locale
 
+
+
+ENCODING = locale.getencoding()
 
 def handle_errors(func):
     @functools.wraps(func)
@@ -27,12 +31,12 @@ def load_package(func):
 
 
 def write_json(filename, package_dict):
-    with open(filename, "w", encoding="utf-8") as f:
+    with open(filename, "w", encoding=ENCODING) as f:
         f.write(json.dumps(package_dict))
 
 
 def read_json(filename):
-    with open(filename, "r", encoding="utf-8") as f:
+    with open(filename, "r", encoding=ENCODING) as f:
         return json.loads(f.read())
 
 
@@ -51,7 +55,7 @@ def create_file(path):
 
 
 def get_version_info(stdout):
-    stdout = stdout.decode("utf-8")
+    stdout = stdout.decode(ENCODING)
     info = {}
     info['name'] = re.findall('Name:(.*)\n', stdout)[0].strip()
     info['version'] = re.findall('Version:(.*)\n', stdout)[0].strip()

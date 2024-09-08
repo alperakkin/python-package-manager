@@ -1,18 +1,58 @@
 # python-package-manager
 
-NPM like package manager written for Python
+NPM like package manager written for Python built on Python Pip module
 
 
-## Build
-TBD
+## Install
+
+Download the repo
+```sh
+
+$ git clone https://github.com/alperakkin/python-package-manager.git
+
+```
+
+Change current directory to python-package-manager folder
+
+```sh
+
+$ cd python-package-manager
+```
+
+Run pip install to install the ppm module
+
+```sh
+
+$> pip install .
+```
+
+
+This commands will install ppm as a package to your local environment.
+
+You can set an alias to use ppm directly
+
+On Windows:
+
+```cmd
+
+C:\> doskey ppm="python -m ppm"
+```
+
+On MacOs & Linux:
+
+```sh
+
+$> alias ppm=python -m ppm
+```
 
 
 ## Quick Start
 
-To create a new Python project
+### Init
+To initialize a new Python project
 
 ```bash
-python -m ppm init
+$> ppm init
 ```
 ppm will ask you to fill up some information about the project as it follows:
 
@@ -23,6 +63,87 @@ Version: Project Version
 Virtual Environment: Python environment name to be created
 Env File: Creates .env file
 Shell: Project runs on given shell
-Module: Select Python to use in the project
+Module: Select installed Python executable for the project virtual environment
+
+```sh
+project:  -> My_Project
+author:  -> John Doe
+author_url:  -> https://github.com/johndoe/myproject
+version: 1.0.0 ->
+virtual_env:  -> my_venv
+env_file: .env ->
+shell: cmd -> sh
+module: python ->
+```
+
+After entering the required project information, ppm will create a project folder, changes cd
+to the project folder and activates the virtual environment.
+
+In the project folder files named "pyconfig.json" and ".env"  will be created.
+
+├── My_Project
+│   ├── my_venv
+│   ├── .env
+│   ├── pyconfig.json
 
 
+
+```sh
+(my_env) $ ~/My_Project >
+```
+
+### Install Dependencies
+
+If you previously created a project you can just type the following command to install all dependencies
+
+
+```sh
+$ ~/My_Project > python -m ppm install
+```
+
+If you just initialized a new project you can  simply type a requirement with/without version
+as it is shown below:
+
+
+```sh
+# To install elasticsearch package
+$ ~/My_Project > python -m ppm install elasticsearch@8.15.0
+```
+
+Elasticsearch dependency automatically added to project config file as shown below:
+
+```json
+{
+    "project": "My_Project",
+    "author": "",
+    "author_url": "",
+    "version": "1.0.0",
+    "virtual_env": "my_venv",
+    "env_file": ".env",
+    "scripts": {
+        "start": "",
+        "build": "",
+        "test": ""
+    },
+    "shell": "cmd",
+    "module": "python",
+    "packages": {
+        "elasticsearch@8.15.0": {
+            "name": "elasticsearch",
+            "version": "8.15.0",
+            "summary": "Python client for Elasticsearch",
+            "home_page": "https://github.com/elastic/elasticsearch-py",
+            "author": "",
+            "author_email": "Elastic Client Library Maintainers <client-libs@elastic.co>",
+            "license": "",
+            "location": "My_Project/my_env/Lib/site-packages",
+            "requires": "elastic-transport",
+            "required_by": ""
+        }
+    }
+}
+```
+
+
+## Dependencies
+Python 3.12 and above
