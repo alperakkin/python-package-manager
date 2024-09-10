@@ -81,10 +81,11 @@ to the project folder and activates the virtual environment.
 
 In the project folder files named "pyconfig.json" and ".env"  will be created.
 
-├── My_Project  
-│   ├── my_venv  
-│   ├── .env  
-│   ├── pyconfig.json  
+My_Project  
+├── my_venv  
+├── .env  
+├── pyconfig.json  
+
 
 
 ```sh
@@ -150,12 +151,13 @@ It is possible to define a start script for your project
 
 Assuming you have a project structure as shown below:
 
-├── My_Project  
-│   ├── my_venv  
-│   ├── .env  
-│   ├── pyconfig.json  
-|   ├── src  
-|       ├── main.py  
+My_Project  
+├── my_venv  
+├── .env  
+├── pyconfig.json  
+└── src  
+    └── main.py  
+  
 
 Add your start script to pyconfig.json
 
