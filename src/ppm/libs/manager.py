@@ -1,8 +1,11 @@
+import pprint
+
 from pathlib import Path
 
 from ppm.libs.utils import (write_json, read_json,
                             handle_errors, load_package, get_package_info,
-                            get_version_info, create_file)
+                            get_version_info, create_file, append_file,
+                            read_file)
 from ppm.libs.process import Shell
 
 
@@ -144,13 +147,39 @@ class PackageManager:
             if not first_use:
                 self.remove_previous_packages(package_name)
 
-          
-            self.shell_manager.install_package(self.virtual_env, install_script)
+            self.shell_manager.install_package(self.virtual_env,
+                                               install_script)
 
-            info = self.shell_manager.show_package(self.virtual_env, package_name)
+            info = self.shell_manager.show_package(self.virtual_env,
+                                                   package_name)
             info = get_version_info(info)
             installed_version = info['version']
             package_def = f'{package_name}@{installed_version}'
             self.packages[package_def] = info
             print(f"{package_def} successfully installed!")
             write_json(self.PACKAGE_PATH, self.to_dict)
+
+    @ handle_errors
+    def cmd_env(self, args):
+        """Adds to environment file
+        Usage: <ppm env key=value>"""
+        if not args:
+            return
+        for arg in args:
+            append_file(self.env_file, arg)
+
+    @ load_package
+    @ handle_errors
+    def cmd_list(self, args):
+        """Lists given package property
+        list command can be used:
+        <ppm list packages>
+        <ppm list env>"""
+
+        match args[0]:
+            case 'packages':
+                pprint.pp(self.packages)
+            case 'env':
+                print(read_file(self.env_file))
+            case _:
+                print(getattr(self, 'cmd_list').__doc__)

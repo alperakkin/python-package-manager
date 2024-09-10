@@ -5,8 +5,8 @@ import re
 import locale
 
 
-
 ENCODING = locale.getencoding()
+
 
 def handle_errors(func):
     @functools.wraps(func)
@@ -69,3 +69,13 @@ def get_version_info(stdout):
     info['requires'] = re.findall('Requires:(.*)\n', stdout)[0].strip()
     info['required_by'] = re.findall('Required-by:(.*)\n', stdout)[0].strip()
     return info
+
+
+def append_file(path, line):
+    with open(path, 'a') as f:
+        f.write('%s\n' % line)
+
+
+def read_file(path):
+    with open(path, 'r') as f:
+        return f.read()

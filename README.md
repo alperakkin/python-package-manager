@@ -249,5 +249,45 @@ You can run any shell script by typing
 Hello World!
 ```
 
+### Get Project Info
+#### Package Info
+To get the package info, type:
+```sh
+$ (my_env) $ ~/My_Project > ppm list packages
+
+{'pandas@2.0.3': {'name': 'pandas',
+                  'version': '2.0.3',
+                  'summary': 'Powerful data structures for data analysis, time '
+                             'series, and statistics',
+                  'home_page': '',
+                  'author': '',
+                  'author_email': 'The Pandas Development Team '
+                                  '<pandas-dev@python.org>',
+                  'license': 'BSD 3-Clause License',
+                  'location': '/Users/alperakkin/Documents/alper/new_project/test/lib/python3.8/site-packages',
+                  'requires': 'numpy, python-dateutil, pytz, tzdata',
+                  'required_by': ''},
+ 'numpy@1.24.4': {'name': 'numpy',
+                  'version': '1.24.4',
+                  'summary': 'Fundamental package for array computing in '
+                             'Python',
+                  'home_page': 'https://www.numpy.org',
+                  'author': 'Travis E. Oliphant et al.',
+                  'author_email': '',
+                  'license': 'BSD-3-Clause',
+                  'location': '/Users/alperakkin/Documents/alper/new_project/test/lib/python3.8/site-packages',
+                  'requires': '',
+                  'required_by': 'pandas'}}
+```
+
+#### Env Info
+To get the environement file info, type:
+
+```sh
+$ (my_env) $ ~/My_Project > ppm list env
+env=PROD
+username=johndoe
+email=johndoe@acme.com
+```
 ## Dependencies
 Python 3.12 and above
