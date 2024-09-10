@@ -56,14 +56,14 @@ $> ppm init
 ```
 ppm will ask you to fill up some information about the project as it follows:
 
-Project Name: Give a name describing you project
-Author: Author of your project
-Author URL: Web Page of the author
-Version: Project Version
-Virtual Environment: Python environment name to be created
-Env File: Creates .env file
-Shell: Project runs on given shell
-Module: Select installed Python executable for the project virtual environment
+Project Name: Give a name describing you project  
+Author: Author of your project  
+Author URL: Web Page of the author  
+Version: Project Version  
+Virtual Environment: Python environment name to be created  
+Env File: Creates .env file  
+Shell: Project runs on given shell  
+Module: Select installed Python executable for the project virtual environment  
 
 ```sh
 project:  -> My_Project
@@ -270,7 +270,7 @@ $ (my_env) $ ~/My_Project > ppm list packages
                   'author_email': 'The Pandas Development Team '
                                   '<pandas-dev@python.org>',
                   'license': 'BSD 3-Clause License',
-                  'location': '/Users/alperakkin/Documents/alper/new_project/test/lib/python3.8/site-packages',
+                  'location': 'My_Project/my_env/Lib/site-packages',
                   'requires': 'numpy, python-dateutil, pytz, tzdata',
                   'required_by': ''},
  'numpy@1.24.4': {'name': 'numpy',
@@ -281,7 +281,7 @@ $ (my_env) $ ~/My_Project > ppm list packages
                   'author': 'Travis E. Oliphant et al.',
                   'author_email': '',
                   'license': 'BSD-3-Clause',
-                  'location': '/Users/alperakkin/Documents/alper/new_project/test/lib/python3.8/site-packages',
+                  'location': 'My_Project/my_env/Lib/site-packages',
                   'requires': '',
                   'required_by': 'pandas'}}
 ```
