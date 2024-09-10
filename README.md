@@ -81,11 +81,10 @@ to the project folder and activates the virtual environment.
 
 In the project folder files named "pyconfig.json" and ".env"  will be created.
 
-├── My_Project   
-│   ├── my_venv   
-│   ├── .env   
-│   ├── pyconfig.json   
-
+├── My_Project
+│   ├── my_venv
+│   ├── .env
+│   ├── pyconfig.json
 
 
 ```sh
@@ -144,6 +143,111 @@ Elasticsearch dependency automatically added to project config file as shown bel
 }
 ```
 
+### Scripting
+
+#### Start
+It is possible to define a start script for your project
+
+Assuming you have a project structure as shown below:
+
+├── My_Project
+│   ├── my_venv
+│   ├── .env
+│   ├── pyconfig.json
+|   ├── src
+|       ├── main.py
+
+Add your start script to pyconfig.json
+
+```json
+{
+    "project": "My_Project",
+    "author": "",
+    "author_url": "",
+    "version": "1.0.0",
+    "virtual_env": "my_venv",
+    "env_file": ".env",
+    "scripts": {
+        "start": "python src/main.py arg1 arg2",
+        "build": "",
+        "test": ""
+    },
+    "shell": "cmd",
+    "module": "python",
+    "packages": {
+        "elasticsearch@8.15.0": {
+            "name": "elasticsearch",
+            "version": "8.15.0",
+            "summary": "Python client for Elasticsearch",
+            "home_page": "https://github.com/elastic/elasticsearch-py",
+            "author": "",
+            "author_email": "Elastic Client Library Maintainers <client-libs@elastic.co>",
+            "license": "",
+            "location": "My_Project/my_env/Lib/site-packages",
+            "requires": "elastic-transport",
+            "required_by": ""
+        }
+    }
+}
+```
+Then just type
+
+```sh
+(my_env) $ ~/My_Project > ppm start
+Hello World
+```
+
+Your project will be started automatically
+
+To build & test your project you can define related scripts to "build" and "test" keys in pyconfig.json file
+
+You can define any shell script to your scripting keys.
+
+```json
+{
+    "project": "My_Project",
+    "author": "",
+    "author_url": "",
+    "version": "1.0.0",
+    "virtual_env": "my_venv",
+    "env_file": ".env",
+    "scripts": {
+        "start": "echo Hello World!",
+        "build": "",
+        "test": ""
+    },
+    "shell": "sh",
+    "module": "python",
+    "packages": {
+        "elasticsearch@8.15.0": {
+            "name": "elasticsearch",
+            "version": "8.15.0",
+            "summary": "Python client for Elasticsearch",
+            "home_page": "https://github.com/elastic/elasticsearch-py",
+            "author": "",
+            "author_email": "Elastic Client Library Maintainers <client-libs@elastic.co>",
+            "license": "",
+            "location": "My_Project/my_env/Lib/site-packages",
+            "requires": "elastic-transport",
+            "required_by": ""
+        }
+    }
+}
+```
+
+```sh
+(my_env) $ ~/My_Project > ppm start
+Hello World!
+```
+
+#### Run
+
+You can run any shell script by typing
+
+```sh
+(my_env) $ ~/My_Project > ppm run "echo Hello World!"
+Hello World!
+```
 
 ## Dependencies
 Python 3.12 and above
